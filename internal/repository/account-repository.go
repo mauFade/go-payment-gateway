@@ -108,3 +108,38 @@ func (r *AccountRepository) FindByID(id string) (*domain.Account, error) {
 
 	return &account, nil
 }
+
+func (r *AccountRepository) Update(acc *domain.Account) error {
+	tx, err := r.db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	defer tx.Rollback()
+
+	var currentBalance float64
+
+	err = r.db.QueryRow(`
+		SELECT balance from accounts WHERE id = $1 FOR UPDATE 
+	`, acc.ID,
+	).Scan(&currentBalance)
+
+	if err == sql.ErrNoRows {
+		return domain.ErrAccountNotFound
+	}
+
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(`
+		UPDATE accounts SET balance = $1, updated_at = $2 WHERE id = $3
+	`, acc.Balance, time.Now(), acc.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
