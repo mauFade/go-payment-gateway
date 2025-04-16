@@ -15,7 +15,7 @@ func NewAccountService(r domain.AccountRepository) *AccountService {
 	}
 }
 
-func (s *AccountService) CreateAccount(input dto.CreateAccountRequest) (*dto.CreateAccountResponse, error) {
+func (s *AccountService) CreateAccount(input dto.CreateAccountRequest) (*dto.AccountOutput, error) {
 	account := dto.ToAccount(input)
 
 	existingAccount, err := s.repository.FindByAPIKey(account.APIKey)
@@ -35,6 +35,26 @@ func (s *AccountService) CreateAccount(input dto.CreateAccountRequest) (*dto.Cre
 	}
 
 	output := dto.FromAccount(account)
+
+	return &output, nil
+}
+
+func (s *AccountService) UpdateBalance(apiKey string, amount float64) (*dto.AccountOutput, error) {
+	acc, err := s.repository.FindByAPIKey(apiKey)
+
+	if err != nil {
+		return nil, err
+	}
+
+	acc.AddBalance(amount)
+
+	err = s.repository.UpdateBalance(acc)
+
+	if err != nil {
+		return nil, err
+	}
+
+	output := dto.FromAccount(acc)
 
 	return &output, nil
 }
