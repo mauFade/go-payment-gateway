@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"github.com/mauFade/go-payment-gateway/internal/repository"
 	"github.com/mauFade/go-payment-gateway/internal/service"
 	"github.com/mauFade/go-payment-gateway/internal/web/server"
@@ -55,4 +56,6 @@ func main() {
 	if err := srv.Start(); err != nil {
 		log.Fatal("error starting http server.")
 	}
+
+	log.Println("HTTP server running at " + port)
 }
