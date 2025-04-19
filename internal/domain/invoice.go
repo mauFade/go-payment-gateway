@@ -1,10 +1,10 @@
 package domain
 
 import (
+	"math/rand/v2"
 	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/exp/rand"
 )
 
 type Status string
@@ -58,7 +58,7 @@ func (i *Invoice) Process() error {
 		return nil
 	}
 
-	randomSource := rand.New(rand.NewSource(time.Now().Unix()))
+	randomSource := rand.New(rand.NewPCG(uint64(time.Now().UnixNano()), uint64(time.Now().UnixNano())))
 	var NewStatus Status
 	if randomSource.Float64() <= 0.7 {
 		NewStatus = StatusApproved
@@ -67,5 +67,15 @@ func (i *Invoice) Process() error {
 	}
 
 	i.Status = NewStatus
+	return nil
+}
+
+func (i *Invoice) UpdateStatus(newStatus Status) error {
+	if i.Status != StatusPending {
+		return ErrInvalidStatus
+	}
+
+	i.Status = newStatus
+	i.UpdatedAt = time.Now()
 	return nil
 }
