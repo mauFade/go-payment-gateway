@@ -11,4 +11,8 @@ var (
 	ErrInvoiceNotFound = errors.New("invoice not found")
 	// When a user is not able to perform that action
 	ErrUnaithorizedAccess = errors.New("unauthorized access")
+	// When invalid amount is provided
+	ErrInvalidAmount = errors.New("invalid amount")
+	// When a invalid status is provided
+	ErrInvalidStatus = errors.New("invalid status")
 )
