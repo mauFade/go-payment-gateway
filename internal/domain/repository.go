@@ -6,3 +6,10 @@ type AccountRepository interface {
 	FindByID(id string) (*Account, error)
 	UpdateBalance(acc *Account) error
 }
+
+type InvoiceRepository interface {
+	Save(i *Invoice) error
+	FindByID(id string) (*Invoice, error)
+	FindByAccountID(accID string) ([]*Invoice, error)
+	UpdateStatus(i *Invoice) error
+}
