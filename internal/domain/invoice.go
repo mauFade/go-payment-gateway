@@ -31,7 +31,7 @@ type CreditCard struct {
 	CardNumber     string
 	CVV            string
 	ExpiryMonth    int
-	ExpirytYear    int
+	ExpiryYear     int
 	CardholderName string
 }
 
