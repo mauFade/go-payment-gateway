@@ -41,7 +41,45 @@ func (s *InvoiceService) Create(input *dto.CreateInvoiceRequest) (*dto.InvoiceOu
 	if err := s.invoiceRepository.Save(invoice); err != nil {
 		return nil, err
 	}
-	o := dto.FromInvoice(invoice)
 
-	return &o, nil
+	return dto.FromInvoice(invoice), nil
+}
+
+func (s *InvoiceService) FindByID(id, apiKey string) (*dto.InvoiceOutput, error) {
+	i, err := s.invoiceRepository.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	acc, err := s.accountService.FindByAPIKey(apiKey)
+	if err != nil {
+		return nil, err
+	}
+	if i.AccountID != acc.ID {
+		return nil, domain.ErrUnaithorizedAccess
+	}
+
+	return dto.FromInvoice(i), nil
+}
+
+func (s *InvoiceService) ListByAccountID(accId string) ([]*dto.InvoiceOutput, error) {
+	invoices, err := s.invoiceRepository.FindByAccountID(accId)
+	if err != nil {
+		return nil, err
+	}
+
+	output := make([]*dto.InvoiceOutput, len(invoices))
+	for i, invoice := range invoices {
+		output[i] = dto.FromInvoice(invoice)
+	}
+	return output, nil
+}
+
+func (s *InvoiceService) ListByAPIKey(apiKey string) ([]*dto.InvoiceOutput, error) {
+	acc, err := s.accountService.FindByAPIKey(apiKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.ListByAccountID(acc.ID)
 }

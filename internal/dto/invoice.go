@@ -48,8 +48,8 @@ func ToInvoice(i *CreateInvoiceRequest, accId string) (*domain.Invoice, error) {
 	return domain.NewInvoice(accId, i.Description, i.PaymentType, i.Amount, card)
 }
 
-func FromInvoice(i *domain.Invoice) InvoiceOutput {
-	return InvoiceOutput{
+func FromInvoice(i *domain.Invoice) *InvoiceOutput {
+	return &InvoiceOutput{
 		ID:             i.ID,
 		AccountID:      i.AccountID,
 		Amount:         i.Amount,
