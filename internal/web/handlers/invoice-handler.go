@@ -11,10 +11,10 @@ import (
 )
 
 type InvoiceHandler struct {
-	service service.InvoiceService
+	service *service.InvoiceService
 }
 
-func NewInvoiceHandler(s service.InvoiceService) *InvoiceHandler {
+func NewInvoiceHandler(s *service.InvoiceService) *InvoiceHandler {
 	return &InvoiceHandler{
 		service: s,
 	}

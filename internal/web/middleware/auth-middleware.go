@@ -8,10 +8,10 @@ import (
 )
 
 type AuthMiddleware struct {
-	accService service.AccountService
+	accService *service.AccountService
 }
 
-func NewAuthMiddleware(accService service.AccountService) *AuthMiddleware {
+func NewAuthMiddleware(accService *service.AccountService) *AuthMiddleware {
 	return &AuthMiddleware{
 		accService: accService,
 	}
